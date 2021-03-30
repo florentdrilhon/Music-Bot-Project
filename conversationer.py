@@ -1,6 +1,7 @@
 # class to respond back to the user according to its intent
 import random
 from recommender import recommender
+import time
 
 
 class conversationer():
@@ -31,14 +32,15 @@ class conversationer():
   def hello(self, senderId):
     # select answer random from the templates
     answer=random.choices(self.patterns['hello'])[0]
-    self.fb.log(answer)
+    self.fb.typing(senderId,1)
     self.fb.txtSender(senderId, answer )
     answer=random.choices(self.patterns['actions'])[0]
+    self.fb.typing(senderId,3)
     self.fb.txtSender(senderId, answer )
+
 
   def goodBye(self, senderId):
     answer=random.choices(self.patterns['Goodbye'])[0]
-    self.fb.log(answer)
     self.fb.txtSender(senderId, answer )
 
 
@@ -53,8 +55,10 @@ class conversationer():
       # setting answer with main informations
       answer="{} is a track made by {} from the {} {} released in {}".format(track["name"], track["artist"]["name"], track["album"]["type"], track["album"]["name"], track["album"]["release"])
       self.fb.txtSender(message["senderId"], answer)
+      time.sleep(2)
       answer=random.choices(self.patterns['listen'])[0]
       self.fb.txtSender(message["senderId"], answer)
+      time.sleep(1.5)
       self.fb.txtSender(message["senderId"], track["link"])
       """
       TODO : here send recommendations linked to the track

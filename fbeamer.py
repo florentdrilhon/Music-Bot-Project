@@ -1,6 +1,7 @@
 apiVersion = 'v9.0'
 
 import requests, sys
+import time
 
 
 class FBeamer():
@@ -48,7 +49,7 @@ class FBeamer():
 
     # function to extract an entity in the NLP object given the name of the Entity
     def extractEntity(self, nlp, entityName):
-      if nlp["entities"][entityName] and nlp["entities"][entityName][0]["confidence"]>=0.60:
+      if entityName in nlp["entities"] and nlp["entities"][entityName][0]["confidence"]>=0.60:
         return nlp["entities"][entityName][0]["value"]
       else :
         self.log("Could not find entity : " + entityName)
@@ -76,6 +77,12 @@ class FBeamer():
           }
       }
       return self.sendMessage(obj)
+
+    def typing(self, sender_id, waiting_time):
+      res1=self.sendMessage({'recipient': sender_id, 'sender_action' : 'typing_on'})
+      time.sleep(waiting_time)
+      res2=self.sendMessage({'recipient': sender_id, 'sender_action' : 'typing_off'})
+
 
     # function to format and send image responses
     def imgSender(self, sender_id, img_url, messaging_type='RESPONSE'):
