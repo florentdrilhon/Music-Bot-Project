@@ -132,8 +132,35 @@ class FBeamer():
         }
       return self.sendMessage(obj)
 
+    def quickReplies(self,senderId, messageText, button1, button2):
+      obj= { 
+        'recipient':{
+          'id': senderId
+        },
+        'message':{
+              "text":messageText,
+              "quick_replies":[
+                {
+                  "content_type": "text",
+                  "title": button1,
+                  "payload": "button1"
+                },
+                {
+                  "content_type": "text",
+                  "title": button2,
+                  "payload": "button2"
+                }
+              ]
+            }
+        }
+      return self.sendMessage(obj)
+
     def log(self, message):
         print(message)
         sys.stdout.flush()
 
-    # TODO function to extract the content of a message
+
+
+    
+
+

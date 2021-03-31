@@ -64,7 +64,7 @@ class conversationer():
       self.fb.txtSender(message["senderId"], track["link"])
       time.sleep(5)
       self.state["lastTrack"]=track
-      self.fb.txtSender(message["senderId"], "Did you like it ?")
+      self.fb.quickReplies(message["senderId"], "Did you like this track ?", "Yes ! 👍", "Not much 👎")
     else : 
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
 
