@@ -1,7 +1,8 @@
-apiVersion = 'v9.0'
+apiVersion = 'v2.6'
 
 import requests, sys
 import time
+import json
 
 
 class FBeamer():
@@ -34,6 +35,8 @@ class FBeamer():
           intent=self.extractIntent(nlp)
           #self.log('Message intent :' + intent)
           obj = {'data': data, 'message': message,'nlp': nlp, 'senderId': senderId, 'intent': intent}
+          # notify the user that the message is received
+          self.mark_seen(senderId)
         # else sending back an empty response
         else : obj = None
         return obj
@@ -60,11 +63,23 @@ class FBeamer():
     # function to send a response to the API
     def sendMessage(self, obj):
         self.log("\nSending response\n")
+        params={
+          "access_token": self.pageAccessToken
+        }
+        headers={
+          "Content-Type" : "application/json"
+        }
+        data=json.dumps(obj)
         response = requests.post(
-                'https://graph.facebook.com/v9.0/me/messages?access_token=' +
-                self.pageAccessToken,
-                json=obj).json()
-        return response
+                'https://graph.facebook.com/v2.6/me/messages',
+                params=params,
+                headers=headers,
+                data=data
+                )
+        # if error report it
+        if response.status_code != 200:
+            self.log(response.status_code)
+            self.log(response.text)
 
     # function to format a text response and then send it
     def txtSender(self, sender_id,text, messaging_type='RESPONSE'):
@@ -79,14 +94,26 @@ class FBeamer():
       return self.sendMessage(obj)
 
     def typing(self, sender_id, waiting_time):
-      res1=self.sendMessage({'recipient': sender_id, 'sender_action' : 'typing_on'})
+      obj1={"recipient": {"id": sender_id}, "sender_action" : "typing_on"}
+      res1=self.sendMessage(obj1)
       time.sleep(waiting_time)
-      res2=self.sendMessage({'recipient': sender_id, 'sender_action' : 'typing_off'})
+      #obj2={"recipient": {"id": sender_id}, "sender_action" : "typing_off"}
+      #res2=self.sendMessage(obj2)
+      return res1
 
+    #function to notify the user that his message has been received
+    def mark_seen(self, sender_id):
+      obj1={
+        "recipient": {
+          "id": sender_id
+             },
+          "sender_action" : "mark_seen"
+          }
+      return self.sendMessage(obj1)
 
     # function to format and send image responses
     def imgSender(self, sender_id, img_url, messaging_type='RESPONSE'):
-      obj={
+      obj={ 
         'recipient':{
           'id': sender_id
         },
