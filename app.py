@@ -3,6 +3,7 @@ from fbeamer import FBeamer
 import random
 from dotenv import load_dotenv
 import os, sys
+import time
 
 from spotifyAPI import spotifyConnector
 from conversationer import conversationer
@@ -43,6 +44,18 @@ def artist():
   return artist
 
 
+
+@app.route('/testClient', methods=['GET'])
+def test_client():
+  return conversationer.test()
+
+
+@app.route('/testServer', methods=['GET'])
+def test_server():
+  senderId=request.args.get('senderId', '123')
+  trackName=request.args.get('trackName', 'Bille Jean')
+  time.sleep(10)
+  log("{}, {}".format(senderId, trackName))
 
 
 # register the webhook

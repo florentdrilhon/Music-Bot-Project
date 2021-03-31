@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
 from tqdm import tqdm
+from math import *
 
 # class to syntethize and integrate the work done on the notebook
 class recommender():
@@ -10,6 +11,9 @@ class recommender():
     self.tracks=pd.read_csv("recommender/datasets/data.csv", sep=',')
     self.normalized_tracks, self.km = self.preprocessing(self.tracks)
     self.normalize_clusters=list(self.normalized_tracks['cluster'].unique()).sort()
+
+  def manhattan_distance(self, x, y):
+        return sum(abs(a-b) for a,b in zip(x,y))
 
 
   def preprocessing(self,df):
@@ -41,10 +45,7 @@ class recommender():
       track_vector=self.normalized_tracks.loc[track['id'].values[0], :]
       res={}
       for trackId, otherTrack in tqdm(self.normalized_tracks.iterrows()):
-        dist=0
-        for col in np.arange(len(self.normalized_tracks.columns)):
-            # manhattan distance
-            dist=dist+np.absolute(float(track_vector[col]) - float(otherTrack[col]))
+        dist=self.manhattan_distance(list(track_vector), list(otherTrack))
         res[trackId]=dist
     # sorting by ascending order as we computed distance and not similarity
       res=dict(sorted(res.items(), key=lambda res: res[1])[1:N]) #we do not take the first value that is the same song

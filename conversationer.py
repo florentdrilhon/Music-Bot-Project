@@ -2,7 +2,7 @@
 import random
 from recommender import recommender
 import time
-
+import requests
 
 class conversationer():
 
@@ -13,6 +13,7 @@ class conversationer():
       self.spotiConnector=spotiConnector
       self.fb=fbeamer
       self.recom = recommender()
+      self.state= {'lastTrack': None}
 
       # patterns contain response templates to send the user
       self.patterns={}
@@ -61,13 +62,13 @@ class conversationer():
       self.fb.txtSender(message["senderId"], answer)
       time.sleep(1.5)
       self.fb.txtSender(message["senderId"], track["link"])
-      """
-      TODO : here send recommendations linked to the track
-      """
-      self.fb.log("getting recommendations")
-      self.trackRecommendations(message["senderId"], track)
+      time.sleep(5)
+      self.state["lastTrack"]=track
+      self.fb.txtSender(message["senderId"], "Did you like it ?")
     else : 
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
+
+
 
   def trackRecommendations(self,senderId, track):
       # getting recommendations
@@ -110,6 +111,9 @@ class conversationer():
       else : 
         self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist you're looking for 😓")
 
+  def test(self):
+    requests.get('http://127.0.0.1:80/testServer')
+    return 'ok', 200
 
     # TODO : scenario/intent to give best tracks of an artist
 
@@ -153,7 +157,13 @@ class conversationer():
     if message['intent']=='artistInfo':
       self.artistInfo(message)
     
-
+    if message['intent']=='yes':
+      #the user wants to get recommendations
+      if self.state["lastTrack"]:
+          self.trackRecommendations(message["senderId"],self.state["lastTrack"])
+    if message['intent']=='No':
+      self.state['lastTrack']=None
+      self.fb.txtSender(message["senderId"], "Sorry that you didn't like it 😔")
   
   # TODO fonction qui prend en entrée une un objet message (contenant intent + entités) et lançant le scénario associé
 
