@@ -71,17 +71,23 @@ class conversationer():
 
 
   def trackRecommendations(self,senderId, track):
-      # getting recommendations
-      recommendations=self.recom.get_recommendation(track["name"],4)
+      # getting recommendations and keeping in memory knowntracks to check for doublons
+      recommendations=self.recom.get_recommendation(track["name"])
+      knownTracks=[track] 
       if recommendations is not None:
         self.fb.txtSender(senderId, random.choices(self.patterns['recommendations'])[0])
-        for id in recommendations.keys():
-          time.sleep(2)
+        i, j = 0, 0
+        # as we want to recommend exactly 3 songs
+        while i < 3 : 
+          id=list(recommendations.keys())[j]
           recommendedTrack=self.spotiConnector.searchTrack(id=id)
-          # checking if the track recommended is not the same as the liked one
-          if recommendedTrack["name"] != track["name"]:
+          if self.recom.isDoublon(recommendedTrack, knownTracks)== False:
+            knownTracks.append(recommendedTrack)
             answer="🎶 {} - 🎤 {} \n 👉 {}".format(recommendedTrack["name"],recommendedTrack["artist"]["name"], recommendedTrack["link"] )
             self.fb.txtSender(senderId, answer)
+            i+=1
+          j+=1
+      # no recommendations found
       else :
         self.fb.txtSender(senderId, "Sorry I could not find recommendations for you track 😔")
 
