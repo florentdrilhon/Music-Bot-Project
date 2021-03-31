@@ -40,11 +40,15 @@ class spotifyConnector():
     return obj
 
   # TODO transform the function to get only ID of queried item
-  def searchTrack(self, trackName):
-    results=self.sp.search(q=trackName, limit=1, type='track')
-    track=results["tracks"]["items"][0]
+  def searchTrack(self, trackName=None, id=None):
+    if id is not None :
+      track=self.sp.track(id)
+    else:
+      results=self.sp.search(q=trackName, limit=1, type='track')
+      track=results["tracks"]["items"][0]
     track=self.extractTrackInfo(track)
     return track
+
 
   
 

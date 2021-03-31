@@ -65,11 +65,24 @@ class conversationer():
       TODO : here send recommendations linked to the track
       """
       self.fb.log("getting recommendations")
-      #recommendations=self.recom.get_recommendation(track["name"], 3)
-      #self.fb.log(recommendations)
+      self.trackRecommendations(message["senderId"], track)
     else : 
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
 
+  def trackRecommendations(self,senderId, track):
+      # getting recommendations
+      recommendations=self.recom.get_recommendation(track["name"],4)
+      if recommendations is not None:
+        self.fb.txtSender(senderId, random.choices(self.patterns['recommendations'])[0])
+        for id in recommendations.keys():
+          time.sleep(2)
+          recommendedTrack=self.spotiConnector.searchTrack(id=id)
+          # checking if the track recommended is not the same as the liked one
+          if recommendedTrack["name"] != track["name"]:
+            answer="🎶 {} - 🎤 {} \n 👉 {}".format(recommendedTrack["name"],recommendedTrack["artist"]["name"], recommendedTrack["link"] )
+            self.fb.txtSender(senderId, answer)
+      else :
+        self.fb.txtSender(senderId, "Sorry I could not find recommendations for you track 😔")
 
   # TODO check ce scénario
 
@@ -115,6 +128,7 @@ class conversationer():
   
 
   def main(self,message):
+    self.fb.log('\nSending response\n')
     if message['intent'] is None:
       answer=random.choices(self.patterns['non-understanding'])[0]
       self.fb.txtSender(message['senderId'], answer )

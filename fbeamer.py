@@ -45,7 +45,10 @@ class FBeamer():
     # function to extract intent from a response from the webhook
     def extractIntent(self, nlp):
       if len(nlp["intents"])>0 and nlp["intents"][0]["confidence"]>=0.65 :
-        return nlp["intents"][0]["name"]
+        intent= nlp["intents"][0]["name"]
+        self.log("Intent detected : {}".format(intent))
+        return intent
+
       else:
         return None
 
@@ -53,7 +56,9 @@ class FBeamer():
     # function to extract an entity in the NLP object given the name of the Entity
     def extractEntity(self, nlp, entityName):
       if entityName in nlp["entities"] and nlp["entities"][entityName][0]["confidence"]>=0.60:
-        return nlp["entities"][entityName][0]["value"]
+        entity= nlp["entities"][entityName][0]["value"]
+        self.log("Entity {} found : {}".format(entityName, entity))
+        return entity
       else :
         self.log("Could not find entity : " + entityName)
         return None
@@ -62,7 +67,6 @@ class FBeamer():
 
     # function to send a response to the API
     def sendMessage(self, obj):
-        self.log("\nSending response\n")
         params={
           "access_token": self.pageAccessToken
         }

@@ -3,6 +3,7 @@ from fbeamer import FBeamer
 import random
 from dotenv import load_dotenv
 import os, sys
+
 from spotifyAPI import spotifyConnector
 from conversationer import conversationer
 env_path = './.env'
@@ -53,7 +54,7 @@ def verify():
 
 @app.route("/webhook", methods=['POST'])
 def function():
-  message=f.receiveMessage(request)
+  message=  f.receiveMessage(request)
   if message:
     conversationer.main(message)
     return 'ok', 200
