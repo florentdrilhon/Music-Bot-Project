@@ -19,8 +19,9 @@ class spotifyConnector():
     id=albumObject["id"]
     name=albumObject["name"]
     release=albumObject["release_date"]
-    type=albumObject["type"]
-    return {'id': id, 'name': name, 'release': release, 'type': type}
+    albumType=albumObject["type"]
+    image=albumObject["images"][0]["url"]
+    return {'id': id, 'name': name, 'release': release, 'type': albumType, 'image': image}
 
   
   # get main info about a track given a trackObject from the Spotify api

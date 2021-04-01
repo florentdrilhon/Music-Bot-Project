@@ -98,14 +98,17 @@ class FBeamer():
       }
       return self.sendMessage(obj)
 
+
+    # feature that is disabled now but will be reactivated in 2021
     def typing(self, sender_id, waiting_time):
       obj1={"recipient": {"id": sender_id}, "sender_action" : "typing_on"}
-      #res1=self.sendMessage(obj1)
-      #obj2={"recipient": {"id": sender_id}, "sender_action" : "typing_off"}
-      #res2=self.sendMessage(obj2)
+      res1=self.sendMessage(obj1)
+      obj2={"recipient": {"id": sender_id}, "sender_action" : "typing_off"}
+      res2=self.sendMessage(obj2)
       return self.sendMessage(obj1)
 
     #function to notify the user that his message has been received
+    # same as typing, it will be reactivated in 2021
     def markSeen(self, sender_id):
       obj1={
         "recipient": {
@@ -153,6 +156,42 @@ class FBeamer():
               ]
             }
         }
+      return self.sendMessage(obj)
+
+    # i decided to implement a special model to send track
+    def trackSender(self, senderId, track):
+      obj={
+          'recipient':{
+            'id': senderId
+          },
+          'message':{
+            "attachment":{
+              "type": "template",
+              "payload":{
+                  "template_type":"generic",
+                  "elements":[
+                      {
+                      "title":track["name"],
+                      "image_url":track["album"]["image"],
+                      "subtitle":track["artist"]["name"],
+                      "default_action": {
+                        "type": "web_url",
+                        "url": track["link"],
+                        "webview_height_ratio": "COMPACT",
+                    },
+                  "buttons":[
+                    {
+                      "type":"web_url",
+                      "url": track["link"],
+                      "title":"Listen here"
+                    }              
+                  ]      
+                }
+              ]
+            }
+          } 
+        }
+      }
       return self.sendMessage(obj)
 
     def log(self, message):

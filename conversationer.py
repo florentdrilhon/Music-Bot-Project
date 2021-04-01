@@ -2,7 +2,6 @@
 import random
 from recommender import recommender
 import time
-import requests
 
 class conversationer():
 
@@ -17,13 +16,13 @@ class conversationer():
 
       # patterns contain response templates to send the user
       self.patterns={}
-      self.patterns['hello']=["Hello there !", "Hi, nice to meet you", "Hi there, it's a pleasure to discuss with you !"]
+      self.patterns['hello']=["Hello there !", "Hi, nice to meet you", "Hi there"]
       self.patterns['actions']=["What can I do for you ?", "Is there something you want to ask me ?", "What do you want me to do ?"]
       self.patterns["Thank you"]=["You're welcome 😊", "It's my pleasure 😉", "Always here to answer questions from a passionate ! 😉"]
       self.patterns["presentation"]=["I'm Fabrice, a bot designed to answer questions about music (especially tracks and artist) and give recommendations about the same topic, so please try to ask me a question about a music 😄"]
       self.patterns["non-understanding"]=["Sorry I didn't understand your question, please try again 😅", "I apologize but I did not undersant your request, please send it again 😅", "Pardon me, I am a young bot and I did not understand your meaning, do not hesitate to try again and I'll try to make progress !😅"]
       self.patterns["Goodbye"]=["See you around 😉!", "Have a nice day !", "It was a pleasure to answer your questions, see you another time !"]
-      self.patterns["listen"]=["You can listen on the Spotify platform here 👉", "Check it out here 👉", "Follow this link to listen to this masterpiece 👉"]
+      self.patterns["listen"]=["You can listen on the Spotify platform here 👉", "Check it out here 👉", "Follow this link to listen to this item 👉", "If you to listen to this track, just click here 👉"]
       self.patterns["image"]=["Here is a little picture to illustrate 😉", "For your eyes only 😎", "To make your eyes meet your ears 😋"]
       self.patterns["recommendations"]=["Here are some items that you may like 🎶", "I found some other items that can interest you 😉", "Check out those recommendations I got four you 👌"]
 
@@ -63,7 +62,7 @@ class conversationer():
       answer=random.choices(self.patterns['listen'])[0]
       self.fb.txtSender(message["senderId"], answer)
       time.sleep(1.5)
-      self.fb.txtSender(message["senderId"], track["link"])
+      self.fb.trackSender(message["senderId"], track)
       time.sleep(5)
       self.state["lastTrack"]=track
       self.fb.quickReplies(message["senderId"], "Did you like this track ?", "Yes ! 👍", "Not much 👎")
@@ -93,8 +92,8 @@ class conversationer():
       else :
         self.fb.txtSender(senderId, "Sorry I could not find recommendations for you track 😔")
 
-  # TODO check ce scénario
 
+  # gives information about an asked artist
   def artistInfo(self, message):
       artistName=self.fb.extractEntity(message["nlp"], "artist:artist")
       if artistName:
@@ -120,9 +119,30 @@ class conversationer():
         self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist you're looking for 😓")
 
 
-    # TODO : scenario/intent to give best tracks of an artist
+  # get the artist who made a asked song
+  def getArtist(self, message):
+    # getting the information about the asked track
+    trackName=self.fb.extractEntity(message["nlp"], "track:track")
+    if trackName:
+      track=self.spotiConnector.searchTrack(trackName)
+      # setting answer with main informations
+      answer="{} was composed by {}".format(track["name"], track["artist"]["name"])
+      self.fb.txtSender(message["senderId"], answer)
+      time.sleep(2)
+      answer=random.choices(self.patterns['listen'])[0]
+      self.fb.txtSender(message["senderId"], answer)
+      time.sleep(1.5)
+      self.fb.txtSender(message["senderId"], track["link"])
+      time.sleep(5)
+      self.state["lastTrack"]=track
+      self.fb.quickReplies(message["senderId"], "Do you like this track ?", "Yes ! 👍", "Not much 👎")
+    else : 
+      self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
 
-    # TODO : scenario/intent to give the artist of given track
+
+
+    
+
 
 
 
@@ -159,6 +179,9 @@ class conversationer():
 
     if message['intent']=='artistInfo':
       self.artistInfo(message)
+    
+    if message['intent']=='getArtist':
+      self.getArtist(message)
     
     if message['intent']=='yes':
       #the user wants to get recommendations
