@@ -195,6 +195,43 @@ class FBeamer():
       }
       return self.sendMessage(obj)
 
+
+    # and also to send artistss
+    def artistSender(self, senderId, artists):
+      elements=[
+                      {
+                      "title":artist["name"],
+                      "image_url":artist["image"],
+                      "default_action": {
+                        "type": "web_url",
+                        "url": artist["link"],
+                        "webview_height_ratio": "TALL",
+                    },
+                  "buttons":[
+                    {
+                      "type":"web_url",
+                      "url": artist["link"],
+                      "title":"Listen here"
+                    }              
+                   ]      
+                }
+              for artist in artists]
+      obj={
+          'recipient':{
+            'id': senderId
+          },
+          'message':{
+            "attachment":{
+              "type": "template",
+              "payload":{
+                  "template_type":"generic",
+                  "elements": elements
+            }
+          } 
+        }
+      }
+      return self.sendMessage(obj)
+
     def log(self, message):
         print(message)
         sys.stdout.flush()

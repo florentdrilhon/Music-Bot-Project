@@ -50,8 +50,16 @@ Gives the user the artist who made an asked track and ask him if he like this tr
 
 If yes, send him recommendations.
 
+##### Artist's Related artists
 
-Recommender system :
+Triggered after the artistInfo scenario. Sends to the user the related Artists of the last artist the user asked about. The bot send the 3 artists in a caroussel of 3 artist templates.
+
+##### Artist's Best tracks
+
+Triggered after the artistInfo scenario. Sends to the user the 3 best tracks of the last artist the user asked about. Again it send it in a carrouseel of 3 tracks templates.
+
+
+## Recommender system :
 
 To recommend items to the user, as the user is not known by the system at first, I decided to use a collaborative filtering content-based recommender system.
 

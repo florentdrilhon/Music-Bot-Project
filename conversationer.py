@@ -101,27 +101,10 @@ class conversationer():
         # setting answer with main informations
         answer="{} is a {} artist".format(artist["name"],artist["genres"][0])
         self.fb.txtSender(message["senderId"], answer)
-
-        answer=random.choices(self.patterns['image'])[0]
-        self.fb.txtSender(message["senderId"], answer)
-        self.fb.imgSender(message["senderId"], artist["image"])
-
+        self.fb.artistSender(message["senderId"], [artist])
+        # save artist in the state for the next scenarii
         self.state["lastArtist"]=artist
-
         self.fb.quickReplies(message["senderId"], "You like this artist ?", "Artist best tracks 🎶", "Related Artists 🎤")
-        
-        """
-         TODO here send buttons to get best artists tracks or artists recommendations 
-        
-
-        self.fb.txtSender(message["senderId"], "Here is the top track of this artist")
-        answer=random.choices(self.patterns['listen'])[0]
-
-        self.fb.txtSender(message["senderId"], answer)
-        self.fb.trackSender(message["senderId"], [artist['top tracks'][0]])
-        """
-
-
       else : 
         self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist you're looking for 😓")
 
@@ -164,8 +147,19 @@ class conversationer():
     else:
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist 😔")
 
+
+  # send artist's related artists
   def relatedArtists(self, message):
-    self.fb.log(self.state["lastArtist"]["name"])
+    # checking if an artists is registered in the state
+    if self.state["lastArtist"] is not None:
+      # send his related artists
+      answer="Here are artists close to {} 🎤".format(self.state["lastArtist"]["name"])
+      self.fb.txtSender(message["senderId"], answer)
+      relatedArtists=self.state["lastArtist"]["related artists"]
+      self.fb.artistSender(message["senderId"], relatedArtists)
+    else :
+      # notify the user 
+      self.fb.txtSender(message["senderId"], "Sorry, I could not remember the artist we are talking about 😓")
     
 
 
