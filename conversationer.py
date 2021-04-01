@@ -12,7 +12,7 @@ class conversationer():
       self.spotiConnector=spotiConnector
       self.fb=fbeamer
       self.recom = recommender()
-      self.state= {'lastTrack': None}
+      self.state= {'lastTrack': None, 'lastArtist': None}
 
       # patterns contain response templates to send the user
       self.patterns={}
@@ -105,15 +105,22 @@ class conversationer():
         answer=random.choices(self.patterns['image'])[0]
         self.fb.txtSender(message["senderId"], answer)
         self.fb.imgSender(message["senderId"], artist["image"])
-        # TODO get the most known track of the artist and send it
-        self.fb.txtSender(message["senderId"], "Here is the top track of this artist")
-        answer=random.choices(self.patterns['listen'])[0]
-        self.fb.txtSender(message["senderId"], answer)
-        self.fb.txtSender(message["senderId"], artist['top tracks'][0]["link"])
+
+        self.state["lastArtist"]=artist
+
+        self.fb.quickReplies(message["senderId"], "You like this artist ?", "Artist best tracks 🎶", "Related Artists 🎤")
         
         """
-        TODO : here send recommendations linked to the artist
+         TODO here send buttons to get best artists tracks or artists recommendations 
+        
+
+        self.fb.txtSender(message["senderId"], "Here is the top track of this artist")
+        answer=random.choices(self.patterns['listen'])[0]
+
+        self.fb.txtSender(message["senderId"], answer)
+        self.fb.trackSender(message["senderId"], [artist['top tracks'][0]])
         """
+
 
       else : 
         self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist you're looking for 😓")
@@ -140,19 +147,27 @@ class conversationer():
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
 
 
+  def artistBestTracks(self, message):
+    # check if an artist is in the state
+    # if not, try to get if from the message
+    artist=None
+    if self.state["lastArtist"] is None:
+      artistName=self.fb.extractEntity(message["nlp"], "artist:artist")
+      if artistName:
+        artist=self.spotiConnector.searchArtist(artistName)
+    else :
+      artist=self.state["lastArtist"]
+    if artist is not None:
+      answer= "Here are the best tracks of {} 🤘".format(artist["name"])
+      self.fb.txtSender(message["senderId"], answer)
+      self.fb.trackSender(message["senderId"],artist['top tracks'] )
+    else:
+      self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist 😔")
 
+  def relatedArtists(self, message):
+    self.fb.log(self.state["lastArtist"]["name"])
     
 
-
-
-
-
-    # bonus TODO : scenario to give tracks for a given genre
-
-   
-
-
-  
 
   def main(self,message):
     self.fb.log('\nSending response\n')
@@ -182,7 +197,13 @@ class conversationer():
     
     if message['intent']=='getArtist':
       self.getArtist(message)
-    
+
+    if message['intent']=='artistsBestTracks':
+      self.artistBestTracks(message)
+
+    if message['intent']=='relatedArtists':
+      self.relatedArtists(message)
+
     if message['intent']=='yes':
       #the user wants to get recommendations
       if self.state["lastTrack"]:
