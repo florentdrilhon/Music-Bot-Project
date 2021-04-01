@@ -62,7 +62,7 @@ class conversationer():
       answer=random.choices(self.patterns['listen'])[0]
       self.fb.txtSender(message["senderId"], answer)
       time.sleep(1.5)
-      self.fb.trackSender(message["senderId"], track)
+      self.fb.trackSender(message["senderId"], [track])
       time.sleep(5)
       self.state["lastTrack"]=track
       self.fb.quickReplies(message["senderId"], "Did you like this track ?", "Yes ! 👍", "Not much 👎")
@@ -84,10 +84,10 @@ class conversationer():
           recommendedTrack=self.spotiConnector.searchTrack(id=id)
           if self.recom.isDoublon(recommendedTrack, knownTracks)== False:
             knownTracks.append(recommendedTrack)
-            answer="🎶 {} - 🎤 {} \n 👉 {}".format(recommendedTrack["name"],recommendedTrack["artist"]["name"], recommendedTrack["link"] )
-            self.fb.txtSender(senderId, answer)
             i+=1
           j+=1
+        # sending the identified tracks in a carrousel
+        self.fb.trackSender(senderId, knownTracks[1:])
       # no recommendations found
       else :
         self.fb.txtSender(senderId, "Sorry I could not find recommendations for you track 😔")

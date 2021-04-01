@@ -47,7 +47,7 @@ class recommender():
     def get_recommendation(self, track_name):
         track = self.tracks[(self.tracks['name'].str.lower()
                              == track_name.lower())].head(1)
-        if track is not None:
+        if track is not None and len(track['id'].values)>0:
             # if track found in the dataset getting the vector associated
             track_vector = self.normalized_tracks.loc[track['id'].values[0], :]
             res = {}

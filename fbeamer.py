@@ -159,17 +159,8 @@ class FBeamer():
       return self.sendMessage(obj)
 
     # i decided to implement a special model to send track
-    def trackSender(self, senderId, track):
-      obj={
-          'recipient':{
-            'id': senderId
-          },
-          'message':{
-            "attachment":{
-              "type": "template",
-              "payload":{
-                  "template_type":"generic",
-                  "elements":[
+    def trackSender(self, senderId, tracks):
+      elements=[
                       {
                       "title":track["name"],
                       "image_url":track["album"]["image"],
@@ -185,9 +176,19 @@ class FBeamer():
                       "url": track["link"],
                       "title":"Listen here"
                     }              
-                  ]      
+                   ]      
                 }
-              ]
+              for track in tracks]
+      obj={
+          'recipient':{
+            'id': senderId
+          },
+          'message':{
+            "attachment":{
+              "type": "template",
+              "payload":{
+                  "template_type":"generic",
+                  "elements": elements
             }
           } 
         }
