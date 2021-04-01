@@ -27,7 +27,7 @@ class FBeamer():
         self.log("\nReceiving message, handling content\n")
         data = request.get_json()
         # check if there is a response
-        if data['entry'] and data['object'] == 'page':
+        if data['entry'] and data['object'] == 'page' :
           #extracting info
           message = data['entry'][0]['messaging'][0]['message']
           nlp=message['nlp']
@@ -36,7 +36,8 @@ class FBeamer():
           #self.log('Message intent :' + intent)
           obj = {'data': data, 'message': message,'nlp': nlp, 'senderId': senderId, 'intent': intent}
           # notify the user that the message is received
-          self.mark_seen(senderId)
+          self.log("Message received correctly, mark as seen")
+          self.markSeen(senderId)
         # else sending back an empty response
         else : obj = None
         return obj
@@ -99,14 +100,13 @@ class FBeamer():
 
     def typing(self, sender_id, waiting_time):
       obj1={"recipient": {"id": sender_id}, "sender_action" : "typing_on"}
-      res1=self.sendMessage(obj1)
-      time.sleep(waiting_time)
+      #res1=self.sendMessage(obj1)
       #obj2={"recipient": {"id": sender_id}, "sender_action" : "typing_off"}
       #res2=self.sendMessage(obj2)
-      return res1
+      return self.sendMessage(obj1)
 
     #function to notify the user that his message has been received
-    def mark_seen(self, sender_id):
+    def markSeen(self, sender_id):
       obj1={
         "recipient": {
           "id": sender_id

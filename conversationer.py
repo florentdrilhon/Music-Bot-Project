@@ -35,9 +35,11 @@ class conversationer():
     # select answer random from the templates
     answer=random.choices(self.patterns['hello'])[0]
     self.fb.typing(senderId,1)
+    time.sleep(1)
     self.fb.txtSender(senderId, answer )
     answer=random.choices(self.patterns['actions'])[0]
     self.fb.typing(senderId,3)
+    time.sleep(3)
     self.fb.txtSender(senderId, answer )
 
 
