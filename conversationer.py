@@ -119,17 +119,12 @@ class conversationer():
       else : 
         self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist you're looking for 😓")
 
-  def test(self):
-    requests.get('http://127.0.0.1:80/testServer')
-    return 'ok', 200
 
     # TODO : scenario/intent to give best tracks of an artist
 
     # TODO : scenario/intent to give the artist of given track
 
-    # TODO : scenario to give recommendation 
-        # if no user profile, send top fr tracks
-        # if user profile send MLT recom.
+
 
 
     # bonus TODO : scenario to give tracks for a given genre

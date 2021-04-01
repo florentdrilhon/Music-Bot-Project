@@ -45,19 +45,6 @@ def artist():
 
 
 
-@app.route('/testClient', methods=['GET'])
-def test_client():
-  return conversationer.test()
-
-
-@app.route('/testServer', methods=['GET'])
-def test_server():
-  senderId=request.args.get('senderId', '123')
-  trackName=request.args.get('trackName', 'Bille Jean')
-  time.sleep(10)
-  log("{}, {}".format(senderId, trackName))
-
-
 # register the webhook
 @app.route('/webhook',methods=['GET'])
 def verify():
@@ -74,11 +61,6 @@ def function():
   else:
     f.log("Could not read message")
     return 'not ok', 500
-
-
-def log(message):
-    print(message)
-    sys.stdout.flush()
 
 
 if __name__ == "__main__":

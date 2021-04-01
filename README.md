@@ -14,6 +14,43 @@ Bot facebook dev link : https://developers.facebook.com/apps/267113828326789/mes
 The bot can answer questions about music and tracks using the Spotify web API and then use theses researches to recommend music to the user.
 
 
+### Intents and scenariis:
+
+All the intents and scenarii are detailed in the conversationner.py. It contains a class that is used to handle all the thread of the conversation, launch scenarii and give different responses.
+
+##### Patterns
+
+The conversationner class has a property "patterns" that is a dictionnary in which I precised different answer model for a given situation (as key in the dict).
+
+
+##### Basic scenarii
+
+The bot is able to detect Hello/Goodbye/Thanks/Presentation/ intents and answer it accordingly, and it also gives a suitable answer when it doesn't understand the intent or other things. 
+
+##### Give informations about tracks
+
+Try asking "tell me about the song/track <trackName> and the bot will provide you basic informations about the asked track
+
+Then it will ask you if you liked the track and trigger the recommendation scenario if yes. 
+
+##### Recommendations
+
+The scenario use an object from the recommender class, it gives it as argument the last track sent to the user, (kept in memory in the state property) and try to compute the recommendations to give back the user 3 tracks he may like.
+
+
+##### Artist Info
+
+Must precise the word "Singer/group/artist" for the bot to understant that the user does not asks for a track (NLP engine are not this accurate nowadays unfotunately).
+The bot then sends informations about the artist, an image an the link of the best artist track.
+
+
+##### Gives artist who made a precise track
+
+Gives the user the artist who made an asked track and ask him if he like this track.
+
+If yes, send him recommendations.
+
+
 Recommender system :
 
 To recommend items to the user, as the user is not known by the system at first, I decided to use a collaborative filtering content-based recommender system.
