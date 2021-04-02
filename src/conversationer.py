@@ -26,10 +26,7 @@ class conversationer():
       self.patterns["image"]=["Here is a little picture to illustrate 😉", "For your eyes only 😎", "To make your eyes meet your ears 😋"]
       self.patterns["recommendations"]=["Here are some items that you may like 🎶", "I found some other items that can interest you 😉", "Check out those recommendations I got four you 👌"]
 
-      # TODO ajouter des patterns
-
-
-
+  # respond to intent hello
   def hello(self, senderId):
     # select answer random from the templates
     answer=random.choices(self.patterns['hello'])[0]
@@ -41,15 +38,15 @@ class conversationer():
     time.sleep(3)
     self.fb.txtSender(senderId, answer )
 
-
+  # respond to intent goodbye
   def goodBye(self, senderId):
     answer=random.choices(self.patterns['Goodbye'])[0]
     self.fb.txtSender(senderId, answer )
 
 
 
-  # TODO check ce scénario
 
+  # gives info about an asked track
   def trackInfo(self, message):
     # getting the information about the asked track
     trackName=self.fb.extractEntity(message["nlp"], "track:track")
@@ -70,7 +67,7 @@ class conversationer():
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
 
 
-
+  # gives recommendations from a track liked by the user
   def trackRecommendations(self,senderId, track):
       # getting recommendations and keeping in memory knowntracks to check for doublons
       recommendations=self.recom.get_recommendation(track["name"])
@@ -109,7 +106,7 @@ class conversationer():
         self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the artist you're looking for 😓")
 
 
-  # get the artist who made a asked song
+  # get the artist who made an asked song
   def getArtist(self, message):
     # getting the information about the asked track
     trackName=self.fb.extractEntity(message["nlp"], "track:track")
@@ -130,6 +127,7 @@ class conversationer():
       self.fb.txtSender(message["senderId"], "Sorry I couldn't understand the name of the track you're looking for 😓")
 
 
+  # send best tracks of an artists
   def artistBestTracks(self, message):
     # check if an artist is in the state
     # if not, try to get if from the message
@@ -162,7 +160,8 @@ class conversationer():
       self.fb.txtSender(message["senderId"], "Sorry, I could not remember the artist we are talking about 😓")
     
 
-
+  # main function to manage the conversation
+  # launch the scenario associated to each intent
   def main(self,message):
     self.fb.log('\nSending response\n')
     if message['intent'] is None:
@@ -198,13 +197,11 @@ class conversationer():
     if message['intent']=='relatedArtists':
       self.relatedArtists(message)
 
-    if message['intent']=='yes':
+    if message['intent']=='yes' and self.state["lastTrack"]:
       #the user wants to get recommendations
-      if self.state["lastTrack"]:
-          self.trackRecommendations(message["senderId"],self.state["lastTrack"])
+        self.trackRecommendations(message["senderId"],self.state["lastTrack"])
+
     if message['intent']=='No':
       self.state['lastTrack']=None
       self.fb.txtSender(message["senderId"], "Sorry that you didn't like it 😔")
-  
-  # TODO fonction qui prend en entrée une un objet message (contenant intent + entités) et lançant le scénario associé
 
