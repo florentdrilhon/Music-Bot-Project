@@ -1,6 +1,6 @@
 env/
 __pycache__
 .env
-recommender/
+.ipynb_checkpoints/
 TODO
 .vscode/
