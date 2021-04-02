@@ -99,25 +99,6 @@ class FBeamer():
       return self.sendMessage(obj)
 
 
-    # feature that is disabled now but will be reactivated in 2021
-    def typing(self, sender_id, waiting_time):
-      obj1={"recipient": {"id": sender_id}, "sender_action" : "typing_on"}
-      res1=self.sendMessage(obj1)
-      obj2={"recipient": {"id": sender_id}, "sender_action" : "typing_off"}
-      res2=self.sendMessage(obj2)
-      return self.sendMessage(obj1)
-
-    #function to notify the user that his message has been received
-    # same as typing, it will be reactivated in 2021
-    def markSeen(self, sender_id):
-      obj1={
-        "recipient": {
-          "id": sender_id
-             },
-          "sender_action" : "mark_seen"
-          }
-      return self.sendMessage(obj1)
-
     # function to format and send image responses
     def imgSender(self, sender_id, img_url, messaging_type='RESPONSE'):
       obj={ 
@@ -158,7 +139,7 @@ class FBeamer():
         }
       return self.sendMessage(obj)
 
-    # i decided to implement a special model to send track
+    # special template to send user friendly tracks
     def trackSender(self, senderId, tracks):
       elements=[
                       {
@@ -196,7 +177,7 @@ class FBeamer():
       return self.sendMessage(obj)
 
 
-    # and also to send artistss
+    # special template to send user friendly artists
     def artistSender(self, senderId, artists):
       elements=[
                       {
@@ -232,6 +213,28 @@ class FBeamer():
       }
       return self.sendMessage(obj)
 
+
+    
+    # feature that is disabled now but will be reactivated in 2021
+    def typing(self, sender_id, waiting_time):
+      obj1={"recipient": {"id": sender_id}, "sender_action" : "typing_on"}
+      res1=self.sendMessage(obj1)
+      obj2={"recipient": {"id": sender_id}, "sender_action" : "typing_off"}
+      res2=self.sendMessage(obj2)
+      return self.sendMessage(obj1)
+
+    #function to notify the user that his message has been received
+    # same as typing, it will be reactivated in 2021
+    def markSeen(self, sender_id):
+      obj1={
+        "recipient": {
+          "id": sender_id
+             },
+          "sender_action" : "mark_seen"
+          }
+      return self.sendMessage(obj1)
+
+    # function to force print information while flask is running
     def log(self, message):
         print(message)
         sys.stdout.flush()
