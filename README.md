@@ -37,7 +37,7 @@ The bot is a pretty simple NLP-based messenger bot that uses the spotify API to 
 
 The bot is able to detect Hello/Goodbye/Thanks/Presentation/ intents and answer it accordingly, and it also gives a suitable answer when it doesn't understand the intent or other things. 
 
-vidéo of basic scénarii
+![](./images/basic-scenarii.gif)
 
 ##### 🎶 Tracks scernarii
 
