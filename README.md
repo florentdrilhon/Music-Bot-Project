@@ -9,7 +9,7 @@ Made by [Florent Drilhon](https://github.com/florentdrilhon) with ❤ and 😁
 
 - [🎯 Overview](#-overview)
 - [👀 Demos](#-scenarii-review-and-demos)
-- [🤖 Bot details](#-project-details)
+- [🤖 Bot details](#-bot-details)
    1. Used technologies
    2. Connection with Messenger
    3. Message extraction
