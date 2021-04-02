@@ -20,7 +20,7 @@ verifyToken=os.getenv("VERIFY_TOKEN")
 spotifyClientId=os.getenv("SPOTIFY_CLIENT_ID")
 spotifySecretId=os.getenv("SPOTIFY_SECRET_ID")
 
-
+#initialization of the instances
 app = Flask(__name__)
 f=FBeamer(pageAccessToken, verifyToken)
 spotiConnector=spotifyConnector(spotifyClientId, spotifySecretId)
@@ -32,20 +32,6 @@ conversationer = conversationer(spotiConnector, f)
 def home():
   return 'server running'
 
-#test for spotify api
-@app.route('/track', methods=['GET'])
-def data():
-  track=spotiConnector.searchTrack('Billie Jean')
-  return track
-
-
-#test for spotify api artist search
-@app.route('/artist', methods=['GET'])
-def artist():
-  artist=spotiConnector.searchArtist('Michael Jackson')
-  return artist
-
-
 
 # register the webhook
 @app.route('/webhook',methods=['GET'])
@@ -53,7 +39,7 @@ def verify():
   return f.registerHook(request)
 
 
-
+# receive message from the webhook
 @app.route("/webhook", methods=['POST'])
 def function():
   message=  f.receiveMessage(request)
@@ -65,6 +51,7 @@ def function():
     return 'not ok', 500
 
 
+# this part is a little different in the repl.it
 if __name__ == "__main__":
   app.run( 
     # Starts the site  # EStablishes the host, required for repl to detect the site
