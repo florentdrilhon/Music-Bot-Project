@@ -11,10 +11,7 @@ class spotifyConnector():
     self.sp=spotipy.Spotify(client_credentials_manager=self.client_credentials_manager)
 
 
-  # function to search an item (any type) in order to return its ID
-  # to make a more detailed search with the ID
-
-  # get main information about an album in the answer made by the spotify API
+  # get main information about an album object from the spotify API
   def extractAlbumInfo(self, albumObject):
     id=albumObject["id"]
     name=albumObject["name"]
@@ -24,7 +21,7 @@ class spotifyConnector():
     return {'id': id, 'name': name, 'release': release, 'type': albumType, 'image': image}
 
   
-  # get main info about a track given a trackObject from the Spotify api
+  # get main info about a track given a trackObject from the Spotify API
   def extractTrackInfo(self, trackObject):
     obj={}
     # getting main information about the track
@@ -40,17 +37,6 @@ class spotifyConnector():
       obj["track_features"]=trackdetails
     return obj
 
-  # TODO transform the function to get only ID of queried item
-  def searchTrack(self, trackName=None, id=None):
-    if id is not None :
-      track=self.sp.track(id)
-    else:
-      results=self.sp.search(q=trackName, limit=1, type='track')
-      track=results["tracks"]["items"][0]
-    track=self.extractTrackInfo(track)
-    return track
-
-
   #function to extract artists main info from an artist object sent by the API
   def extractArtistsInfo(self, artistObject):
     obj={}
@@ -62,6 +48,19 @@ class spotifyConnector():
     obj["image"]=artistObject["images"][0]["url"]
     return obj
 
+  
+  # function to get a track info from a given track name
+  def searchTrack(self, trackName=None, id=None):
+    if id is not None :
+      track=self.sp.track(id)
+    else:
+      results=self.sp.search(q=trackName, limit=1, type='track')
+      track=results["tracks"]["items"][0]
+    track=self.extractTrackInfo(track)
+    return track
+
+
+  # function to get a track info from a given artist name
   def searchArtist(self, artistName ):
     result = self.sp.search(q=artistName, limit=1, type='artist')
     artist=result["artists"]["items"][0]
@@ -77,10 +76,4 @@ class spotifyConnector():
     obj["related artists"]=relatedArtists
     return obj
 
-
-
-
-  # TODO get artist info with its ID
-
-  # TODO BONUS get album info with its ID
 
