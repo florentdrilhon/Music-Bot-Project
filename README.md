@@ -8,7 +8,6 @@ Made by [Florent Drilhon](https://github.com/florentdrilhon) with ❤ and 😁
 ## Summary
 
 - [🎯 Overview](#-overview)
-- [📝 How to install](#-how-to-install)
 - [👀 Demos](#-scenarii-review-and-demos)
 - [🤖 Bot details](#-project-details)
    1. Used technologies
