@@ -1,6 +1,6 @@
 # class to respond back to the user according to its intent
 import random
-from recommender import recommender
+from recommender.recommender import recommender
 import time
 
 class conversationer():

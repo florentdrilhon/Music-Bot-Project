@@ -1,12 +1,14 @@
 from flask import Flask, request
-from fbeamer import FBeamer
 import random
 from dotenv import load_dotenv
 import os, sys
 import time
 
-from spotifyAPI import spotifyConnector
-from conversationer import conversationer
+from src.fbeamer import FBeamer
+from src.spotifyAPI import spotifyConnector
+from src.conversationer import conversationer
+
+
 env_path = './.env'
 load_dotenv(dotenv_path=env_path)
 
