@@ -46,7 +46,7 @@ Then it will ask you if you liked the track and trigger the recommendation scena
 
 The scenario use an object from the recommender class, it gives it as argument the last track sent to the user, (kept in memory in the state property) and try to compute the recommendations to give back the user 3 tracks he may like.
 
-video
+![](./images/track-scenarii-demo.gif)
 
 
 ##### 🎤 Artists Scenarii
@@ -56,7 +56,7 @@ The bot then sends informations about the artist and then asks if the user wants
 
 Can also give the user the artist who made an asked track and ask him if he like this track.
 
-video
+![](./images/artist-scenarii-demo.gif)
 
 
 ## 🤖 Bot details
